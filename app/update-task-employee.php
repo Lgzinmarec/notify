@@ -54,7 +54,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         }
 
     } else {
-        $erro = "Ocorreu um erro desconhecido";
+        $erro = "Erro desconhecido";
         header("Location: ../create_task.php?error=$erro");
         exit();
     }
