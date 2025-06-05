@@ -39,6 +39,13 @@
 				<span>Notificações</span>
 			</a>
 		</li>
+        <li>
+    <a href="calculator.php">
+        <i class="fa fa-calculator" aria-hidden="true"></i>
+        <span>Calculadora</span>
+    </a>
+</li>
+
 		<li>
 			<a href="logout.php">
 				<i class="fa fa-sign-out" aria-hidden="true"></i>

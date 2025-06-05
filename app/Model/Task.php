@@ -104,11 +104,14 @@ function count_tasks($conn){
 	return $stmt->rowCount();
 }
 
-function update_task($conn, $data){
-	$sql = "UPDATE tasks SET title=?, description=?, assigned_to=?, due_date=? WHERE id=?";
-	$stmt = $conn->prepare($sql);
-	$stmt->execute($data);
+function update_task($conn, $dados) {
+    // $dados = [title, description, assigned_to, due_date, points, id]
+    $sql = "UPDATE tasks SET title = ?, description = ?, assigned_to = ?, due_date = ?, points = ? WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute($dados);
 }
+
+
 
 function update_task_status($conn, $data){
 	$sql = "UPDATE tasks SET status=? WHERE id=?";
@@ -217,4 +220,57 @@ function average_points_by_user($conn, $user_id) {
     $stmt->execute([$user_id]);
     $row = $stmt->fetch();
     return round($row['average'], 2) ?? 0;
+} function get_completed_tasks_by_user($conn, $id){
+	$sql = "SELECT * FROM tasks WHERE assigned_to=? AND status='completed'";
+	$stmt = $conn->prepare($sql);
+	$stmt->execute([$id]);
+
+	if($stmt->rowCount() > 0){
+		return $stmt->fetchAll();
+	}
+	return 0;
 }
+function get_completed_tasks_by_user_in_date_range($conn, $user_id, $start_date, $end_date) {
+    $sql = "SELECT * FROM tasks 
+            WHERE assigned_to = ? 
+              AND status = 'completed' 
+              AND updated_at BETWEEN ? AND ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id, $start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+
+    if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll();
+    }
+    return 0;
+}
+function get_all_tasks_with_points_by_user($conn, $user_id) {
+    $sql = "SELECT points, status FROM tasks WHERE assigned_to = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    
+    return $stmt->rowCount() > 0 ? $stmt->fetchAll() : 0;
+}
+
+function get_incomplete_tasks_by_user($conn, $user_id) {
+    $sql = "SELECT points, title FROM tasks WHERE assigned_to = ? AND status != 'completed'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        return 0;
+    }
+}
+
+
+function get_incomplete_tasks_by_user_in_date_range($conn, $user_id, $inicio, $fim) {
+    $sql = "SELECT points, title FROM tasks WHERE assigned_to = ? AND status != 'completed' AND due_date BETWEEN ? AND ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id, $inicio, $fim]);
+    if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        return 0;
+    }
+}
+

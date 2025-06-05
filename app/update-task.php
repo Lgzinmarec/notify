@@ -2,7 +2,7 @@
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 
-    if (isset($_POST['id']) && isset($_POST['title']) && isset($_POST['description']) && isset($_POST['due_date'])) {
+    if (isset($_POST['id'], $_POST['title'], $_POST['description'], $_POST['due_date'], $_POST['points'])) {
         include "../DB_connection.php";
 
         function validar_entrada($data) {
@@ -16,6 +16,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         $descricao = validar_entrada($_POST['description']);
         $id = validar_entrada($_POST['id']);
         $data_entrega = validar_entrada($_POST['due_date']);
+        $pontos = intval($_POST['points']); // converte para inteiro
 
         if ($_SESSION['role'] == 'admin') {
             if (!isset($_POST['assigned_to']) || $_POST['assigned_to'] == 0) {
@@ -25,7 +26,6 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
             }
             $atribuido_para = validar_entrada($_POST['assigned_to']);
         } else {
-            
             $atribuido_para = $_SESSION['id'];
         }
 
@@ -40,9 +40,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         } else {
             include "Model/Task.php";
 
-            
-
-            $dados = array($titulo, $descricao, $atribuido_para, $data_entrega, $id);
+            // Incluindo o campo pontos no array
+            $dados = array($titulo, $descricao, $atribuido_para, $data_entrega, $pontos, $id);
             update_task($conn, $dados);
 
             $em = "Tarefa atualizada com sucesso";

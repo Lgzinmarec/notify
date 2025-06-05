@@ -80,6 +80,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
 						?>
 					</select><br>
 				</div>
+				<div class="input-holder">
+    <label>Pontos</label>
+    <input type="number" name="points" class="input-1" placeholder="Pontos da tarefa" value="<?= $task['points'] ?? 0 ?>" min="0"><br>
+</div>
+
 
 				<input type="hidden" name="id" value="<?=$task['id']?>">
 
