@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
     include "../DB_connection.php";
@@ -12,31 +12,31 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
                 Você não possui notificações
             </a>
         </li>
-    <?php } else {
+        <?php } else {
         foreach ($notifications as $notification) {
-           
+
             $tipo = htmlspecialchars($notification['type']);
             $mensagem = htmlspecialchars($notification['message']);
             $data = htmlspecialchars($notification['date']);
             $id = intval($notification['id']);
-    ?>
-        <li>
-            <a href="app/notification-read.php?notification_id=<?=$id?>">
-                <?php 
-                if ($notification['is_read'] == 0) {
-                    echo "<mark>$tipo</mark>: ";
-                } else {
-                    echo "$tipo: ";
-                }
-                ?>
-                <?=$mensagem?>
-                &nbsp;&nbsp;<small><?=$data?></small>
-            </a>
-        </li>
-    <?php 
-        } 
+        ?>
+            <li>
+                <a href="app/notification-read.php?notification_id=<?= $id ?>">
+                    <?php
+                    if ($notification['is_read'] == 0) {
+                        echo "<mark>$tipo</mark>: ";
+                    } else {
+                        echo "$tipo: ";
+                    }
+                    ?>
+                    <?= $mensagem ?>
+                    &nbsp;&nbsp;<small><?= $data ?></small>
+                </a>
+            </li>
+<?php
+        }
     }
-} else { 
+} else {
     echo "";
 }
 ?>

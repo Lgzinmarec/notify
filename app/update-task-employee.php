@@ -1,67 +1,38 @@
-<?php 
+<?php
 session_start();
-if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 
-    if (isset($_POST['title']) && isset($_POST['description']) && isset($_POST['due_date'])) {
+if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] === 'employee') {
+    if (isset($_POST['id']) && isset($_POST['status'])) {
         include "../DB_connection.php";
+        include "Model/Task.php";
 
-        function validar_dado($dado) {
-            $dado = trim($dado);
-            $dado = stripslashes($dado);
-            $dado = htmlspecialchars($dado);
-            return $dado;
-        }
+        $id = (int) $_POST['id'];
+        $status = $_POST['status'];
+        $employeeId = $_SESSION['id'];
 
-        $titulo = validar_dado($_POST['title']);
-        $descricao = validar_dado($_POST['description']);
-        $prazo = validar_dado($_POST['due_date']);
-
-     
-        if ($_SESSION['role'] == 'admin') {
-            if (!isset($_POST['assigned_to']) || $_POST['assigned_to'] == 0) {
-                $erro = "Selecione um aluno";
-                header("Location: ../create_task.php?error=$erro");
-                exit();
-            }
-            $atribuido_para = validar_dado($_POST['assigned_to']);
-        } else {
-           
-            $atribuido_para = $_SESSION['id'];
-        }
-
-        if (empty($titulo)) {
-            $erro = "O título é obrigatório";
-            header("Location: ../create_task.php?error=$erro");
-            exit();
-        } else if (empty($descricao)) {
-            $erro = "A descrição é obrigatória";
-            header("Location: ../create_task.php?error=$erro");
-            exit();
-        } else {
-            include "Model/Task.php";
-            include "Model/Notification.php";
-
-            $dados_tarefa = array($titulo, $descricao, $atribuido_para, $prazo);
-            insert_task($conn, $dados_tarefa);
-
-            $mensagem_notificacao = "'$titulo' foi atribuída a você. Por favor, revise e inicie o trabalho";
-            $dados_notificacao = array($mensagem_notificacao, $atribuido_para, 'Nova Tarefa Atribuída');
-            insert_notification($conn, $dados_notificacao);
-
-            $sucesso = "Tarefa criada com sucesso";
-            header("Location: ../create_task.php?success=$sucesso");
+        // Verifica se a tarefa pertence ao funcionário logado
+        $task = get_task_by_id($conn, $id);
+        if (!$task || $task['assigned_to'] != $employeeId) {
+            $erro = "Você não tem permissão para alterar esta tarefa.";
+            header("Location: ../edit-task-employee.php?id=$id&error=$erro");
             exit();
         }
 
+        // Atualiza apenas o status
+        $sql = "UPDATE tasks SET status = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$status, $id]);
+
+        $sucesso = "Status atualizado com sucesso.";
+        header("Location: ../edit-task-employee.php?id=$id&success=$sucesso");
+        exit();
     } else {
-        $erro = "Erro desconhecido";
-        header("Location: ../create_task.php?error=$erro");
+        $erro = "Dados incompletos.";
+        header("Location: ../edit-task-employee.php?id=".$_POST['id']."&error=$erro");
         exit();
     }
-
-} else { 
-    $erro = "Faça login primeiro";
-    header("Location: ../create_task.php?error=$erro");
+} else {
+    $erro = "Acesso negado.";
+    header("Location: ../login.php?error=$erro");
     exit();
 }
-?>

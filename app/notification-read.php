@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
@@ -7,21 +7,19 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 
     if (isset($_GET['notification_id']) && is_numeric($_GET['notification_id'])) {
         $notification_id = intval($_GET['notification_id']);
-        
-        
+
+
         notification_make_read($conn, $_SESSION['id'], $notification_id);
 
         header("Location: ../notifications.php");
         exit();
-
     } else {
-        
+
         header("Location: index.php");
         exit();
     }
-} else { 
+} else {
     $em = "First login";
     header("Location: login.php?error=$em");
     exit();
 }
-?>

@@ -57,11 +57,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
                 <div class="input-holder">
                     <label>Status</label>
                     <select name="status" class="input-1">
-                        <option 
-                              <?php if($task['status'] == "pending") echo"selected"; ?>>pendente</option>
-                        <option <?php if($task['status'] == "in_progress") echo"selected"; ?>>em_andamento</option>
-                        <option <?php if($task['status'] == "completed") echo"selected"; ?>>concluída</option>
-                    </select><br>
+    <option value="pending" <?php if($task['status'] == "pending") echo "selected"; ?>>Pendente</option>
+    <option value="in_progress" <?php if($task['status'] == "in_progress") echo "selected"; ?>>Em andamento</option>
+    <option value="completed" <?php if($task['status'] == "completed") echo "selected"; ?>>Concluída</option>
+</select><br>
+
                 </div>
                 <input type="text" name="id" value="<?=$task['id']?>" hidden>
 
