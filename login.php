@@ -23,8 +23,8 @@
             <div class="alert alert-success" role="alert">
                 <?php echo stripcslashes($_GET['success']); ?>
             </div>
-        <?php } 
-         
+        <?php }
+
         ?>
 
         <div class="mb-3">

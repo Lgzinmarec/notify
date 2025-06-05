@@ -7,7 +7,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 
 	$users = get_all_users($conn);
 
-?>
+	?>
 	<!DOCTYPE html>
 	<html>
 
@@ -62,9 +62,9 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 								<?php
 								if ($users != 0) {
 									foreach ($users as $user) {
-								?>
+										?>
 										<option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
-								<?php }
+									<?php }
 								} ?>
 							</select>
 						<?php } else { ?>
@@ -93,7 +93,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 
 	</html>
 
-<?php
+	<?php
 } else {
 	$em = "Faça login primeiro";
 	header("Location: login.php?error=$em");

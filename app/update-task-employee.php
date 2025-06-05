@@ -10,7 +10,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] === 
         $status = $_POST['status'];
         $employeeId = $_SESSION['id'];
 
-        // Verifica se a tarefa pertence ao funcionário logado
+
         $task = get_task_by_id($conn, $id);
         if (!$task || $task['assigned_to'] != $employeeId) {
             $erro = "Você não tem permissão para alterar esta tarefa.";
@@ -18,7 +18,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] === 
             exit();
         }
 
-        // Atualiza apenas o status
+
         $sql = "UPDATE tasks SET status = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->execute([$status, $id]);
@@ -28,7 +28,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] === 
         exit();
     } else {
         $erro = "Dados incompletos.";
-        header("Location: ../edit-task-employee.php?id=".$_POST['id']."&error=$erro");
+        header("Location: ../edit-task-employee.php?id=" . $_POST['id'] . "&error=$erro");
         exit();
     }
 } else {

@@ -43,7 +43,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 		} else {
 			include "Model/Task.php";
 
-			// Incluindo o campo pontos no array
+
 			$dados = array($titulo, $descricao, $atribuido_para, $data_entrega, $pontos, $id);
 			update_task($conn, $dados);
 

@@ -306,26 +306,25 @@ function get_incomplete_tasks_by_user_in_date_range($conn, $user_id, $inicio, $f
 }
 function get_tasks_assigned_to_user($conn, $userId)
 {
-    $sql = "SELECT id, title, points, status FROM tasks WHERE assigned_to = :userId";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	$sql = "SELECT id, title, points, status FROM tasks WHERE assigned_to = :userId";
+	$stmt = $conn->prepare($sql);
+	$stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+	$stmt->execute();
+	$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($result) {
-        return $result;
-    }
-    return 0;
+	if ($result) {
+		return $result;
+	}
+	return 0;
 }
 
 
 function get_total_points_completed_by_user($conn, $userId)
 {
-    $sql = "SELECT SUM(points) as total FROM tasks WHERE assigned_to = :userId AND status = 'completed'";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $row['total'] ?? 0;
+	$sql = "SELECT SUM(points) as total FROM tasks WHERE assigned_to = :userId AND status = 'completed'";
+	$stmt = $conn->prepare($sql);
+	$stmt->bindValue(':userId', $userId, PDO::PARAM_INT);
+	$stmt->execute();
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['total'] ?? 0;
 }
-
