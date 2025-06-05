@@ -46,12 +46,18 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
             header("Location: ../create_task.php?error=$erro");
             exit();
         }
+        $points = validar_dado($_POST['points']);
+        if (!is_numeric($points) || $points < 0) {
+            $points = 0;
+        }
+
 
 
         include "Model/Task.php";
         include "Model/Notification.php";
 
-        $dados_tarefa = array($titulo, $descricao, $atribuido_para, $prazo);
+        $dados_tarefa = array($titulo, $descricao, $atribuido_para, $prazo, $points);
+
         insert_task($conn, $dados_tarefa);
 
         $mensagem_notificacao = "'$titulo' foi atribuída a você. Por favor, revise e inicie o trabalho";

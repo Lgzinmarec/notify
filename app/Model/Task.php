@@ -1,10 +1,11 @@
 <?php 
 
 function insert_task($conn, $data){
-	$sql = "INSERT INTO tasks (title, description, assigned_to, due_date) VALUES(?,?,?,?)";
-	$stmt = $conn->prepare($sql);
-	$stmt->execute($data);
+    $sql = "INSERT INTO tasks (title, description, assigned_to, due_date, points) VALUES(?,?,?,?,?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute($data);
 }
+
 
 function get_all_tasks($conn){
 	$sql = "SELECT * FROM tasks ORDER BY id DESC";
@@ -201,4 +202,19 @@ function count_my_completed_tasks($conn, $id){
 	$stmt->execute([$id]);
 
 	return $stmt->rowCount();
+}
+function sum_completed_points_by_user($conn, $user_id) {
+    $sql = "SELECT SUM(points) AS total FROM tasks WHERE assigned_to = ? AND status = 'completed'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    $row = $stmt->fetch();
+    return $row['total'] ?? 0;
+}
+
+function average_points_by_user($conn, $user_id) {
+    $sql = "SELECT AVG(points) AS average FROM tasks WHERE assigned_to = ? AND status = 'completed'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$user_id]);
+    $row = $stmt->fetch();
+    return round($row['average'], 2) ?? 0;
 }
