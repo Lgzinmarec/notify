@@ -117,7 +117,7 @@ function count_tasks($conn)
 
 function update_task($conn, $dados)
 {
-	// $dados = [title, description, assigned_to, due_date, points, id]
+	
 	$sql = "UPDATE tasks SET title = ?, description = ?, assigned_to = ?, due_date = ?, points = ? WHERE id = ?";
 	$stmt = $conn->prepare($sql);
 	return $stmt->execute($dados);
