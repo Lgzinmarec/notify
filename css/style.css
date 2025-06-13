@@ -11,7 +11,6 @@
 	align-items: center;
 	padding: 15px 30px;
 	background: #064420;
-	/* verde escuro */
 	color: #fff;
 }
 
@@ -22,7 +21,6 @@
 
 .u-name b {
 	color: #1AFF66;
-	/* verde neon */
 }
 
 .header i {
@@ -68,7 +66,7 @@
 
 .notification-bar ul li a {
 	text-decoration: none;
-	color: #fff;
+	color: #000 !important; /* links pretos na notificação */
 }
 
 .notification-bar ul li:nth-child(even) {
@@ -98,7 +96,6 @@
 .side-bar {
 	width: 250px;
 	background: #0B3D2E;
-	/* verde escuro */
 	min-height: 100vh;
 	transition: 500ms width;
 }
@@ -124,7 +121,6 @@
 
 .side-bar ul li:hover {
 	background: #00C853;
-	/* verde médio */
 }
 
 .side-bar ul li a {
@@ -203,7 +199,6 @@
 	padding-left: 10px;
 	border: none;
 	background: #00B300;
-	/* botão verde */
 	padding: 10px 15px;
 	color: #fff;
 	font-size: 16px;
@@ -241,7 +236,6 @@
 
 .delete-btn {
 	background: #1B5E20;
-	/* verde escuro */
 	color: #fff;
 }
 
@@ -316,12 +310,4 @@
 .dashboard-item span {
 	color: #fff;
 	font-size: 30px;
-}
-
-/* Forçando todos os links a serem brancos */
-a,
-a:visited,
-a:hover,
-a:active {
-	color: #fff !important;
 }
