@@ -36,7 +36,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 			$password_hash = password_hash($password, PASSWORD_DEFAULT);
 
 
-			$role = "employee";
+			$role = "user";
 			$dados = array($full_name, $user_name, $password_hash, $role, $id);
 
 			update_user($conn, $dados);

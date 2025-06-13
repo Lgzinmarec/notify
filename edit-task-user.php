@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "employee") {
+if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "user") {
     include "DB_connection.php";
     include "app/Model/Task.php";
     include "app/Model/User.php";
@@ -36,7 +36,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
                 <h4 class="title">Editar Tarefa <a href="my_task.php">Tarefas</a></h4>
                 <form class="form-1"
                     method="POST"
-                    action="app/update-task-employee.php">
+                    action="app/update-task-user.php">
                     <?php if (isset($_GET['error'])) { ?>
                         <div class="danger" role="alert">
                             <?php echo stripcslashes($_GET['error']); ?>

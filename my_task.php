@@ -53,7 +53,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 								<td><?= $task['points'] ?? 0 ?></td>
 								<td><?= $task['due_date'] == "" ? "Sem prazo" : $task['due_date'] ?></td>
 								<td>
-									<a href="edit-task-employee.php?id=<?= $task['id'] ?>" class="edit-btn">Editar</a>
+									<a href="edit-task-user.php?id=<?= $task['id'] ?>" class="edit-btn">Editar</a>
 								</td>
 							</tr>
 						<?php } ?>

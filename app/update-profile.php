@@ -7,7 +7,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
         isset($_POST['new_password']) && 
         isset($_POST['password']) && 
         isset($_POST['full_name']) && 
-        $_SESSION['role'] === 'employee'
+        $_SESSION['role'] === 'user'
     ) {
         include "../DB_connection.php";
 

@@ -3,7 +3,7 @@
 function get_all_users($conn){
 	$sql = "SELECT * FROM users WHERE role =? ";
 	$stmt = $conn->prepare($sql);
-	$stmt->execute(["employee"]);
+	$stmt->execute(["user"]);
 
 	if($stmt->rowCount() > 0){
 		$users = $stmt->fetchAll();
@@ -51,7 +51,7 @@ function update_profile($conn, $data){
 }
 
 function count_users($conn){
-	$sql = "SELECT id FROM users WHERE role='employee'";
+	$sql = "SELECT id FROM users WHERE role='user'";
 	$stmt = $conn->prepare($sql);
 	$stmt->execute([]);
 

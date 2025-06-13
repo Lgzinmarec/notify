@@ -22,7 +22,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
     }
 
 
-    $data = array($id, "employee");
+    $data = array($id, "user");
     delete_user($conn, $data);
 
 

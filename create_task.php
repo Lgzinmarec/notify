@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['role'], ["admin", "employee"])) {
+if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['role'], ["admin", "user"])) {
 
 	include "DB_connection.php";
 	include "app/Model/User.php";

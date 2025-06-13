@@ -32,7 +32,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
             include "Model/User.php";
             $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
 
-            $dados_usuario = array($nome_completo, $usuario, $senha_hash, "employee");
+            $dados_usuario = array($nome_completo, $usuario, $senha_hash, "user");
             insert_user($conn, $dados_usuario);
 
             $sucesso = "Usuário criado com sucesso";

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == 'employee') {
+if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == 'user') {
     include "DB_connection.php";
     include "app/Model/Task.php";
 

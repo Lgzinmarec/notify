@@ -5,7 +5,7 @@
     </div>
 
     <?php
-    if ($_SESSION['role'] == "employee") {
+    if ($_SESSION['role'] == "user") {
     ?>
         <!-- Estudante -->
         <ul id="navList">
