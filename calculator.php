@@ -2,7 +2,7 @@
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == 'user') {
     require_once "app/Controller/CalculatorController.php";
-    $data = calculator_controller($_GET);
+  $data = calculator_controller();
 
     $completed_tasks = $data['completed'] ?? [];
     $incomplete_tasks = $data['incomplete'] ?? [];
