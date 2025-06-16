@@ -53,7 +53,8 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 
 
 
-        include "Model/Task.php";
+        require_once 'app/Model/Task.php'; 
+
         include "Model/Notification.php";
 
         $dados_tarefa = array($titulo, $descricao, $atribuido_para, $prazo, $points);

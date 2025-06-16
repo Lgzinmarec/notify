@@ -1,45 +1,18 @@
 <?php
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == 'user') {
-    include "DB_connection.php";
-    include "app/Model/Task.php";
+    require_once "app/Controller/CalculatorController.php";
+    $data = calculator_controller($_GET);
 
-    $inicio = $_GET['inicio'] ?? null;
-    $fim = $_GET['fim'] ?? null;
+    $completed_tasks = $data['completed'] ?? [];
+    $incomplete_tasks = $data['incomplete'] ?? [];
+    $total_pontos = $data['total_pontos'] ?? 0;
+    $quantidade_tarefas = $data['qtd'] ?? 0;
+    $media = $data['media'] ?? 0;
+    $total_pontos_perdidos = $data['perdidos'] ?? 0;
+    $inicio = $data['inicio'] ?? '';
+    $fim = $data['fim'] ?? '';
 
-
-    if ($inicio && $fim) {
-        $completed_tasks = get_completed_tasks_by_user_in_date_range($conn, $_SESSION['id'], $inicio, $fim);
-    } else {
-        $completed_tasks = get_completed_tasks_by_user($conn, $_SESSION['id']);
-    }
-
-    $total_pontos = 0;
-    $quantidade_tarefas = 0;
-
-    if ($completed_tasks != 0) {
-        foreach ($completed_tasks as $task) {
-            $total_pontos += $task['points'];
-            $quantidade_tarefas++;
-        }
-        $media = $quantidade_tarefas > 0 ? round($total_pontos / $quantidade_tarefas, 2) : 0;
-    } else {
-        $media = 0;
-    }
-
-
-    if ($inicio && $fim) {
-        $incomplete_tasks = get_incomplete_tasks_by_user_in_date_range($conn, $_SESSION['id'], $inicio, $fim);
-    } else {
-        $incomplete_tasks = get_incomplete_tasks_by_user($conn, $_SESSION['id']);
-    }
-
-    $total_pontos_perdidos = 0;
-    if ($incomplete_tasks != 0) {
-        foreach ($incomplete_tasks as $task) {
-            $total_pontos_perdidos += $task['points'];
-        }
-    }
 ?>
     <!DOCTYPE html>
     <html>
@@ -59,22 +32,21 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == '
                 <h4 class="title">Calculadora de Pontos</h4>
 
                 <form method="GET" style="margin-bottom: 20px;">
-                    <label>De: <input type="date" name="inicio" value="<?= htmlspecialchars($_GET['inicio'] ?? '') ?>"></label>
-                    <label>Até: <input type="date" name="fim" value="<?= htmlspecialchars($_GET['fim'] ?? '') ?>"></label>
+                    <label>De: <input type="date" name="inicio" value="<?= htmlspecialchars($inicio) ?>"></label>
+                    <label>Até: <input type="date" name="fim" value="<?= htmlspecialchars($fim) ?>"></label>
                     <button type="submit">Filtrar</button>
                 </form>
 
-                <?php if ($completed_tasks != 0) { ?>
+                <?php if (!empty($completed_tasks)) { ?>
                     <table class="main-table">
                         <tr>
                             <th>#</th>
                             <th>Título</th>
                             <th>Pontos</th>
                         </tr>
-                        <?php $i = 0;
-                        foreach ($completed_tasks as $task) { ?>
+                        <?php foreach ($completed_tasks as $index => $task) { ?>
                             <tr>
-                                <td><?= ++$i ?></td>
+                                <td><?= $index + 1 ?></td>
                                 <td><?= htmlspecialchars($task['title']) ?></td>
                                 <td><?= $task['points'] ?? 0 ?></td>
                             </tr>
@@ -90,14 +62,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == '
 
                 <?php } else { ?>
                     <h3>Você ainda não concluiu nenhuma tarefa.</h3>
-                    <?php if ($incomplete_tasks != 0) { ?>
+                    <?php if (!empty($incomplete_tasks)) { ?>
                         <p><strong>Total de Pontos Perdidos:</strong> <?= $total_pontos_perdidos ?> pontos</p>
                     <?php } ?>
                 <?php } ?>
             </section>
         </div>
 
-        <script type="text/javascript">
+        <script>
             var active = document.querySelector("#navList li:nth-child(6)");
             if (active) active.classList.add("active");
         </script>
@@ -108,7 +80,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == '
 <?php
 } else {
     $em = "Acesso negado ou sessão expirada";
-    header("Location: login.php?error=$em");
+    header("Location: login.php?error=" . urlencode($em));
     exit();
 }
 ?>

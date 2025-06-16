@@ -1,8 +1,13 @@
 <?php
-session_start(); 
+session_start();
 
 if (isset($_POST['user_name']) && isset($_POST['password'])) {
     include "../DB_connection.php";
+    require_once "app/Controller/LoginController.php";
+    $data = login_controller();
+    $error = $data['error'];
+    $success = $data['success'];
+
 
     function validate_input($data)
     {
@@ -26,7 +31,7 @@ if (isset($_POST['user_name']) && isset($_POST['password'])) {
     } else {
         $sql = "SELECT * FROM users WHERE username = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$user_name]); 
+        $stmt->execute([$user_name]);
 
         if ($stmt->rowCount() == 1) {
             $user = $stmt->fetch();

@@ -41,7 +41,9 @@ if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 			header("Location: ../edit-task.php?error=$em&id=$id");
 			exit();
 		} else {
-			include "Model/Task.php";
+			require_once __DIR__ . "/Model/Task.php";
+
+
 
 
 			$dados = array($titulo, $descricao, $atribuido_para, $data_entrega, $pontos, $id);

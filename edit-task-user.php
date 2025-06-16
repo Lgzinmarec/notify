@@ -1,87 +1,73 @@
 <?php
 session_start();
-if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "user") {
-    include "DB_connection.php";
-    include "app/Model/Task.php";
-    include "app/Model/User.php";
+if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] === "user") {
 
-    if (!isset($_GET['id'])) {
-        header("Location: tasks.php");
-        exit();
-    }
-    $id = $_GET['id'];
-    $task = get_task_by_id($conn, $id);
+	include "DB_connection.php";
+	require_once "app/Controller/EditTaskUserController.php";
 
-    if ($task == 0) {
-        header("Location: tasks.php");
-        exit();
-    }
-    $users = get_all_users($conn);
+	$data = edit_task_user_controller();
+	$task = $data['task'];
+	$mensagem = $data['mensagem'];
+	$erro = $data['erro'];
 ?>
-    <!DOCTYPE html>
-    <html>
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Editar Tarefa</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+	<body>
+		<input type="checkbox" id="checkbox">
+		<?php include "inc/header.php"; ?>
+		<div class="body">
+			<?php include "inc/nav.php"; ?>
 
-    <head>
-        <title>Editar Tarefa</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/style.css">
-    </head>
+			<section class="section-1">
+				<h4 class="title">Editar Tarefa <a href="my_task.php">Tarefas</a></h4>
 
-    <body>
-        <input type="checkbox" id="checkbox">
-        <?php include "inc/header.php" ?>
-        <div class="body">
-            <?php include "inc/nav.php" ?>
-            <section class="section-1">
-                <h4 class="title">Editar Tarefa <a href="my_task.php">Tarefas</a></h4>
-                <form class="form-1"
-                    method="POST"
-                    action="app/update-task-user.php">
-                    <?php if (isset($_GET['error'])) { ?>
-                        <div class="danger" role="alert">
-                            <?php echo stripcslashes($_GET['error']); ?>
-                        </div>
-                    <?php } ?>
+				<?php if ($erro): ?>
+					<div class="danger" role="alert"><?= htmlspecialchars($erro) ?></div>
+				<?php endif; ?>
 
-                    <?php if (isset($_GET['success'])) { ?>
-                        <div class="success" role="alert">
-                            <?php echo stripcslashes($_GET['success']); ?>
-                        </div>
-                    <?php } ?>
-                    <div class="input-holder">
-                        <label></label>
-                        <p><b>Título: </b><?= $task['title'] ?></p>
-                    </div>
-                    <div class="input-holder">
-                        <label></label>
-                        <p><b>Descrição: </b><?= $task['description'] ?></p>
-                    </div><br>
-                    <div class="input-holder">
-                        <label>Status</label>
-                        <select name="status" class="input-1">
-                            <option value="pending" <?php if ($task['status'] == "pending") echo "selected"; ?>>Pendente</option>
-                            <option value="in_progress" <?php if ($task['status'] == "in_progress") echo "selected"; ?>>Em andamento</option>
-                            <option value="completed" <?php if ($task['status'] == "completed") echo "selected"; ?>>Concluída</option>
-                        </select><br>
+				<?php if ($mensagem): ?>
+					<div class="success" role="alert"><?= htmlspecialchars($mensagem) ?></div>
+				<?php endif; ?>
 
-                    </div>
-                    <input type="text" name="id" value="<?= $task['id'] ?>" hidden>
+				<form class="form-1" method="POST" action="">
+					<div class="input-holder">
+						<label></label>
+						<p><b>Título: </b><?= htmlspecialchars($task['title']) ?></p>
+					</div>
+					<div class="input-holder">
+						<label></label>
+						<p><b>Descrição: </b><?= nl2br(htmlspecialchars($task['description'])) ?></p>
+					</div><br>
+					<div class="input-holder">
+						<label>Status</label>
+						<select name="status" class="input-1">
+							<option value="pending" <?= $task['status'] === "pending" ? "selected" : "" ?>>Pendente</option>
+							<option value="in_progress" <?= $task['status'] === "in_progress" ? "selected" : "" ?>>Em andamento</option>
+							<option value="completed" <?= $task['status'] === "completed" ? "selected" : "" ?>>Concluída</option>
+						</select><br>
+					</div>
+					<input type="hidden" name="id" value="<?= (int)$task['id'] ?>">
+					<button class="edit-btn">Atualizar</button>
+				</form>
+			</section>
+		</div>
 
-                    <button class="edit-btn">Atualizar</button>
-                </form>
-            </section>
-        </div>
+		<script type="text/javascript">
+			var active = document.querySelector("#navList li:nth-child(2)");
+			if (active) active.classList.add("active");
+		</script>
+	</body>
+	</html>
 
-        <script type="text/javascript">
-            var active = document.querySelector("#navList li:nth-child(2)");
-            active.classList.add("active");
-        </script>
-    </body>
-
-    </html>
-<?php } else {
-    $em = "Faça login primeiro";
-    header("Location: login.php?error=$em");
-    exit();
+<?php
+} else {
+	$em = "Faça login primeiro";
+	header("Location: login.php?error=" . urlencode($em));
+	exit();
 }
 ?>

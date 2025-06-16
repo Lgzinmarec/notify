@@ -2,8 +2,10 @@
 session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "admin") {
 	include "DB_connection.php";
-	include "app/Model/Task.php";
+	
 	include "app/Model/User.php";
+	require_once 'app/Model/Task.php';
+
 
 	if (!isset($_GET['id'])) {
 		header("Location: tasks.php");
@@ -20,13 +22,11 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
 
 	$users = get_all_users($conn);
 
-	// Pega o usuário atribuído nessa tarefa
 	$assignedUserId = $task['assigned_to'];
 
-	// Total de pontos concluídos pelo usuário atribuído
+	
 	$total_pontos_usuario = get_total_points_completed_by_user($conn, $assignedUserId);
 
-	// Lista das tarefas atribuídas ao usuário
 	$tasks_assigned = get_tasks_assigned_to_user($conn, $assignedUserId);
 ?>
 	<!DOCTYPE html>
@@ -46,10 +46,9 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && $_SESSION['role'] == "
 			<section class="section-1">
 				<h4 class="title">Editar Tarefa <a href="tasks.php">Voltar</a></h4>
 
-				<!-- Exibe total de pontos do usuário -->
 				<p><strong>Total de pontos concluídos pelo usuário atribuído:</strong> <?= $total_pontos_usuario ?></p>
 
-				<!-- Exibe tabela com tarefas atribuídas -->
+				
 				<?php if ($tasks_assigned != 0) { ?>
 					<table class="main-table" style="margin-bottom: 20px;">
 						<thead>

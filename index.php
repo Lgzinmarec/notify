@@ -3,7 +3,8 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id'])) {
 
 	include "DB_connection.php";
-	include "app/Model/Task.php";
+	require_once 'app/Model/Task.php'; 
+
 	include "app/Model/User.php";
 
 	if ($_SESSION['role'] == "admin") {

@@ -3,11 +3,12 @@ session_start();
 if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['role'], ["admin", "user"])) {
 
 	include "DB_connection.php";
-	include "app/Model/User.php";
+	require_once "app/Controller/CreateTaskController.php";
 
-	$users = get_all_users($conn);
-
-	?>
+	$data = create_task_controller();
+	$users = $data['users'];
+	$mensagem = $data['mensagem'];
+?>
 	<!DOCTYPE html>
 	<html>
 
@@ -26,19 +27,14 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 			<section class="section-1">
 				<h4 class="title">Criar Tarefa</h4>
 
-				<form class="form-1" method="POST" action="app/add-task.php">
-					<?php if (isset($_GET['error'])) { ?>
-						<div class="danger" role="alert">
-							<?php echo stripcslashes($_GET['error']); ?>
-						</div>
-					<?php } ?>
+				
+				<?php if ($mensagem): ?>
+					<div class="success" role="alert">
+						<?= $mensagem ?>
+					</div>
+				<?php endif; ?>
 
-					<?php if (isset($_GET['success'])) { ?>
-						<div class="success" role="alert">
-							<?php echo stripcslashes($_GET['success']); ?>
-						</div>
-					<?php } ?>
-
+				<form class="form-1" method="POST">
 					<div class="input-holder">
 						<label>Título</label>
 						<input type="text" name="title" class="input-1" placeholder="Título"><br>
@@ -59,31 +55,27 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 						<?php if ($_SESSION['role'] == 'admin') { ?>
 							<select name="assigned_to" class="input-1">
 								<option value="0">Selecionar Aluno</option>
-								<?php
-								if ($users != 0) {
-									foreach ($users as $user) {
-										?>
+								<?php if ($users != 0): ?>
+									<?php foreach ($users as $user): ?>
 										<option value="<?= $user['id'] ?>"><?= $user['full_name'] ?></option>
-									<?php }
-								} ?>
+									<?php endforeach; ?>
+								<?php endif; ?>
 							</select>
 						<?php } else { ?>
 							<input type="hidden" name="assigned_to" value="<?= $_SESSION['id'] ?>">
 							<p style="color:#333; font-weight:bold;">Você está criando esta tarefa para si mesmo.</p>
 						<?php } ?>
 					</div>
+
 					<div class="input-holder">
 						<label>Valor em Pontos</label>
 						<input type="number" name="points" class="input-1" placeholder="Ex: 50" min="0" value="0"><br>
 					</div>
 
-
 					<button class="edit-btn">Criar Tarefa</button>
 				</form>
 			</section>
 		</div>
-
-
 
 		<script type="text/javascript">
 			var active = document.querySelector("#navList li:nth-child(3)");
@@ -93,7 +85,7 @@ if (isset($_SESSION['role']) && isset($_SESSION['id']) && in_array($_SESSION['ro
 
 	</html>
 
-	<?php
+<?php
 } else {
 	$em = "Faça login primeiro";
 	header("Location: login.php?error=$em");
